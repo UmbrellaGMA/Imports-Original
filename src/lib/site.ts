@@ -10,12 +10,17 @@ export const whatsappUrl = (number: string, message: string) =>
 
 export function productMessage(
   name: string,
-  options: { color?: string; capacity?: string; url?: string; condition?: string } = {},
+  options: { color?: string; capacity?: string; url?: string; condition?: string; soldOut?: boolean } = {},
 ) {
-  const lines = [`Olá! Gostaria de consultar a disponibilidade de: *${name}*`];
-  if (options.condition) lines.push(`Condição: ${options.condition}`);
-  if (options.capacity) lines.push(`Capacidade: ${options.capacity}`);
-  if (options.color) lines.push(`Cor: ${options.color}`);
-  if (options.url) lines.push(options.url);
-  return lines.join("\n");
+  const details = [`*${name}*`];
+  if (options.condition) details.push(`Condição: ${options.condition}`);
+  if (options.capacity) details.push(`Capacidade: ${options.capacity}`);
+  if (options.color) details.push(`Cor: ${options.color}`);
+
+  // Blocos separados por linha em branco, com o link sozinho no fim.
+  const blocks = options.soldOut
+    ? ["Olá! Vi no site que este produto está esgotado:", details.join("\n"), "Pode me avisar quando ele voltar?"]
+    : ["Olá! Tenho interesse neste produto:", details.join("\n"), "Ele está disponível?"];
+  if (options.url) blocks.push(options.url);
+  return blocks.join("\n\n");
 }

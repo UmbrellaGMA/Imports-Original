@@ -346,7 +346,7 @@ export function ProductForm({ product, categories }: { product: Product | null; 
 
           <Section title="Exibição">
             <div className="space-y-4">
-              <Switch label="Disponível" hint="Mostra a disponibilidade na loja." checked={available} onChange={setAvailable} />
+              <Switch label="Esgotado" hint="Continua no site, com o selo de esgotado." checked={!available} onChange={(soldOut) => setAvailable(!soldOut)} />
               <Switch label="Destaque" hint="Aparece nos destaques da página inicial." checked={featured} onChange={setFeatured} />
               <Switch label="Lançamento" hint="Recebe o selo de lançamento." checked={isNew} onChange={setIsNew} />
             </div>

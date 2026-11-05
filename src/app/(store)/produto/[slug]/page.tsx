@@ -25,12 +25,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!product) return { title: "Produto não encontrado" };
   const { brand } = await getSiteContent();
   const description = product.description.slice(0, 160) || `${product.name} na ${brand.name}. Consulte a disponibilidade pelo WhatsApp.`;
-  const image = product.images.find((url) => !url.endsWith(".svg"));
   return {
     title: product.name,
     description,
     alternates: { canonical: `/produto/${product.slug}` },
-    openGraph: { title: product.name, description, url: `/produto/${product.slug}`, ...(image ? { images: [image] } : {}) },
+    // A imagem vem de opengraph-image.ts, nesta mesma pasta.
+    openGraph: { title: product.name, description, url: `/produto/${product.slug}` },
   };
 }
 

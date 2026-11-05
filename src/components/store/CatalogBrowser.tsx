@@ -17,7 +17,7 @@ const toggle = (list: string[], value: string) =>
 const AVAILABILITY: Array<[Availability, string]> = [
   ["todos", "Todos"],
   ["disponiveis", "Disponíveis"],
-  ["indisponiveis", "Indisponíveis"],
+  ["indisponiveis", "Esgotados"],
 ];
 
 const CONDITIONS: Array<[ProductCondition | null, string]> = [
@@ -205,7 +205,7 @@ export function CatalogBrowser({ products }: { products: Product[] }) {
     ...filters.brands.map((brand) => ({ key: `marca-${brand}`, label: brand, clear: { brands: filters.brands.filter((b) => b !== brand) } })),
     ...(filters.min !== null ? [{ key: "min", label: `A partir de ${formatPrice(filters.min)}`, clear: { min: null } }] : []),
     ...(filters.max !== null ? [{ key: "max", label: `Até ${formatPrice(filters.max)}`, clear: { max: null } }] : []),
-    ...(filters.availability !== "todos" ? [{ key: "disp", label: filters.availability === "disponiveis" ? "Disponíveis" : "Indisponíveis", clear: { availability: "todos" as const } }] : []),
+    ...(filters.availability !== "todos" ? [{ key: "disp", label: filters.availability === "disponiveis" ? "Disponíveis" : "Esgotados", clear: { availability: "todos" as const } }] : []),
     ...(filters.condition ? [{ key: "condicao", label: filters.condition === "novo" ? "Novos" : "Seminovos", clear: { condition: null } }] : []),
     ...(filters.onlyOffers ? [{ key: "ofertas", label: "Ofertas", clear: { onlyOffers: false } }] : []),
   ];

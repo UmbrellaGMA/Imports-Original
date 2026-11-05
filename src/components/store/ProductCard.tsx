@@ -18,30 +18,33 @@ export function ProductCard({ product, priority = false }: { product: Product; p
   const { categories, contact } = useStore();
   const url = useProductUrl(product.slug);
   const [cover, alternate] = product.images;
+  // Fotos preenchem o espaço, cortando as sobras. Ilustrações são recortes e ficam inteiras.
+  const isPhoto = (src: string | undefined) => Boolean(src) && !src?.endsWith(".svg");
+  const fit = (src: string | undefined) => (isPhoto(src) ? "!object-cover" : "");
   const href = `/produto/${product.slug}`;
   return (
     <article className="group relative flex h-full flex-col rounded-[26px] bg-white shadow-soft ring-1 ring-black/[0.04] transition-[box-shadow,transform] duration-500 ease-soft hover:-translate-y-1 hover:shadow-lift">
       <div className="relative m-2 mb-0 aspect-[5/4] overflow-hidden rounded-[20px] bg-canvas sm:aspect-square">
-        <div className="absolute inset-[5%] transition-transform duration-700 ease-soft group-hover:scale-[1.04]">
+        <div className={`absolute ${isPhoto(cover) ? "inset-0" : "inset-[5%]"} transition-transform duration-700 ease-soft group-hover:scale-[1.04] ${product.available ? "" : "opacity-55 grayscale-[35%]"}`}>
           <ProductImage
             src={cover ?? categoryArt(categories, product.category)}
             alt={product.name}
             sizes={CARD_SIZES}
             priority={priority}
-            className={alternate ? "transition-opacity duration-500 group-hover:opacity-0" : ""}
+            className={`${fit(cover)} ${alternate ? "transition-opacity duration-500 group-hover:opacity-0" : ""}`}
           />
           {alternate && (
             <ProductImage
               src={alternate}
               alt=""
               sizes={CARD_SIZES}
-              className="opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+              className={`${fit(alternate)} opacity-0 transition-opacity duration-500 group-hover:opacity-100`}
             />
           )}
         </div>
         {!product.available && (
-          <span className="absolute right-3 top-3 rounded-full bg-white/90 px-2.5 py-1 text-[11px] font-medium text-ink-soft backdrop-blur">
-            Indisponível
+          <span className="absolute right-3 top-3 rounded-full bg-ink px-2.5 py-1 text-[11px] font-semibold text-white">
+            Esgotado
           </span>
         )}
       </div>
@@ -71,13 +74,13 @@ export function ProductCard({ product, priority = false }: { product: Product; p
         <div className="mt-auto pt-4">
           <Price price={product.price} promoPrice={product.promoPrice} />
           <a
-            href={whatsappUrl(contact.whatsapp, productMessage(product.name, { url, condition: product.condition ? CONDITION_LABELS[product.condition] : undefined }))}
+            href={whatsappUrl(contact.whatsapp, productMessage(product.name, { url, soldOut: !product.available, condition: product.condition ? CONDITION_LABELS[product.condition] : undefined }))}
             target="_blank"
             rel="noopener noreferrer"
             className="btn btn-outline relative z-10 mt-3.5 w-full !py-2.5 !text-[13.5px] hover:!border-accent hover:!bg-accent hover:!text-white"
           >
             <WhatsAppIcon size={15} />
-            Consultar disponibilidade
+            {product.available ? "Consultar disponibilidade" : "Avisar quando chegar"}
           </a>
         </div>
       </div>

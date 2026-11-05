@@ -202,13 +202,25 @@ test("arrastar coloca o item na posição indicada, para cima e para baixo", () 
   assert.deepEqual(list, ["a", "b", "c", "d"]);
 });
 
-test("mensagem do WhatsApp termina com o link do produto", () => {
+test("mensagem do WhatsApp vem em blocos e termina com o link sozinho", () => {
   const message = productMessage("iPhone Pro", { capacity: "256 GB", color: "Preto", condition: "Seminovo", url: "https://loja.com/produto/iphone-pro" });
-  assert.deepEqual(message.split("\n"), [
-    "Olá! Gostaria de consultar a disponibilidade de: *iPhone Pro*",
-    "Condição: Seminovo",
-    "Capacidade: 256 GB",
-    "Cor: Preto",
+  assert.deepEqual(message.split("\n\n"), [
+    "Olá! Tenho interesse neste produto:",
+    "*iPhone Pro*\nCondição: Seminovo\nCapacidade: 256 GB\nCor: Preto",
+    "Ele está disponível?",
+    "https://loja.com/produto/iphone-pro",
+  ]);
+});
+
+test("mensagem sem opções não deixa linhas soltas", () => {
+  assert.equal(productMessage("iPad"), "Olá! Tenho interesse neste produto:\n\n*iPad*\n\nEle está disponível?");
+});
+
+test("mensagem de produto esgotado pede a previsão de volta e mantém o link", () => {
+  assert.deepEqual(productMessage("iPhone Pro", { soldOut: true, url: "https://loja.com/produto/iphone-pro" }).split("\n\n"), [
+    "Olá! Vi no site que este produto está esgotado:",
+    "*iPhone Pro*",
+    "Pode me avisar quando ele voltar?",
     "https://loja.com/produto/iphone-pro",
   ]);
 });

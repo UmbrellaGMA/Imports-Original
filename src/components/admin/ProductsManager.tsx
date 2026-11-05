@@ -13,7 +13,6 @@ import type { Product, ProductFlag } from "@/lib/types";
 import { Switch } from "./Switch";
 
 const FLAGS: Array<[ProductFlag, string]> = [
-  ["available", "Disponível"],
   ["featured", "Destaque"],
   ["isNew", "Lançamento"],
 ];
@@ -175,6 +174,7 @@ export function ProductsManager({ products, categories }: { products: Product[];
 
                 <div className="mt-3 flex flex-wrap items-center justify-between gap-x-4 gap-y-2.5 border-t border-line pt-3 md:mt-0 md:flex-nowrap md:border-0 md:pt-0">
                   <div className="flex flex-wrap gap-x-4 gap-y-2">
+                    <Switch label="Esgotado" checked={!product.available} onChange={(soldOut) => setFlag(product, "available", !soldOut)} />
                     {FLAGS.map(([flag, label]) => (
                       <Switch key={flag} label={label} checked={product[flag]} onChange={(value) => setFlag(product, flag, value)} />
                     ))}

@@ -48,7 +48,7 @@ export function ProductOptions({ product }: { product: Product }) {
   const [capacity, setCapacity] = useState(product.capacities[0]);
   const conditionText = product.condition ? CONDITION_LABELS[product.condition] : undefined;
   const url = useProductUrl(product.slug);
-  const link = whatsappUrl(contact.whatsapp, productMessage(product.name, { color, capacity, url, condition: conditionText }));
+  const link = whatsappUrl(contact.whatsapp, productMessage(product.name, { color, capacity, url, condition: conditionText, soldOut: !product.available }));
 
   return (
     <div>
@@ -60,7 +60,7 @@ export function ProductOptions({ product }: { product: Product }) {
 
       <p className="mt-3 flex items-center gap-2 text-sm font-medium">
         <span className={`size-2 rounded-full ${product.available ? "bg-[#1f9d74]" : "bg-[#b4b4b0]"}`} />
-        {product.available ? "Disponível" : "Indisponível no momento"}
+        {product.available ? "Disponível" : "Esgotado"}
       </p>
 
       <ConditionDetails product={product} />
@@ -113,16 +113,18 @@ export function ProductOptions({ product }: { product: Product }) {
 
       <a href={link} target="_blank" rel="noopener noreferrer" className="btn btn-accent mt-8 w-full !py-4 !text-[17px]">
         <WhatsAppIcon size={20} />
-        Consultar pelo WhatsApp
+        {product.available ? "Consultar pelo WhatsApp" : "Avisar quando chegar"}
       </a>
-      <p className="mt-3 text-center text-[13px] text-ink-mute">A conversa já abre com o produto escolhido.</p>
+      <p className="mt-3 text-center text-[13px] text-ink-mute">
+        {product.available ? "A conversa já abre com o produto escolhido." : "Fale com a equipe para saber quando este produto volta."}
+      </p>
 
       {/* Atalho fixo no celular para manter o contato sempre ao alcance */}
       <div className="fixed inset-x-0 bottom-0 z-30 flex items-center gap-3 border-t border-black/[0.06] bg-white/85 px-4 py-2.5 backdrop-blur-xl lg:hidden">
         <p className="min-w-0 flex-1 truncate text-sm font-medium">{product.name}</p>
         <a href={link} target="_blank" rel="noopener noreferrer" className="btn btn-accent shrink-0 !px-4 !py-2.5 !text-sm">
           <WhatsAppIcon size={16} />
-          Consultar
+          {product.available ? "Consultar" : "Avisar"}
         </a>
       </div>
     </div>
