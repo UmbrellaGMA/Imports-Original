@@ -23,7 +23,7 @@ Sem as chaves do Supabase, o site roda em **modo demonstração**:
 
 | Tela | O que muda |
 | --- | --- |
-| Produtos | Cadastro, condição (novo ou seminovo), avarias, garantia, imagens, preços, destaque, disponibilidade e ordem |
+| Produtos | Cadastro, condição (novo ou seminovo), avarias, garantia, imagens, ajuste da capa, preços, destaque, esgotado, ordem, ocultar e duplicar |
 | Categorias | Criar, renomear, trocar a imagem, reordenar, ocultar e excluir (só sem produtos) |
 | Página inicial | Banners, títulos, vitrines e demais seções: editar, reordenar, ocultar, adicionar e excluir |
 | Identidade e contato | Nome, logo, favicon, WhatsApp, Instagram, menu, rodapé, SEO e senha do painel |
