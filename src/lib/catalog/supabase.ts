@@ -3,7 +3,7 @@ import { randomUUID } from "node:crypto";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import type { Category } from "@/lib/categories";
 import { normalizeContent } from "@/lib/content";
-import { slugify } from "@/lib/format";
+import { isStaleCopySlug, slugify } from "@/lib/format";
 import { createSessionClient } from "@/lib/supabase/server";
 import type { Product, ProductFlag, ProductInput } from "@/lib/types";
 import type { CatalogRepository } from "./repository";
@@ -24,9 +24,11 @@ type Row = {
   colors: Product["colors"];
   capacities: string[];
   images: string[];
+  cover_adjust: Product["coverAdjust"];
   featured: boolean;
   is_new: boolean;
   available: boolean;
+  visible: boolean;
   condition: Product["condition"];
   conservation: Product["conservation"];
   battery_health: number | null;
@@ -58,9 +60,11 @@ const fromRow = (row: Row): Product => ({
   colors: row.colors,
   capacities: row.capacities,
   images: row.images,
+  coverAdjust: row.cover_adjust,
   featured: row.featured,
   isNew: row.is_new,
   available: row.available,
+  visible: row.visible,
   condition: row.condition,
   conservation: row.conservation,
   batteryHealth: row.battery_health,
@@ -87,9 +91,11 @@ const toRow = (input: ProductInput) => ({
   colors: input.colors,
   capacities: input.capacities,
   images: input.images,
+  cover_adjust: input.coverAdjust,
   featured: input.featured,
   is_new: input.isNew,
   available: input.available,
+  visible: input.visible,
   condition: input.condition,
   conservation: input.conservation,
   battery_health: input.batteryHealth,
@@ -105,6 +111,7 @@ const FLAG_COLUMNS: Record<ProductFlag, string> = {
   featured: "featured",
   isNew: "is_new",
   available: "available",
+  visible: "visible",
 };
 
 /** Cliente sem sessão: leitura pública, compatível com páginas em cache. */
@@ -169,7 +176,9 @@ export const supabaseRepository: CatalogRepository = {
   },
   async update(id, input) {
     const db = await createSessionClient();
-    const row = unwrap<Row>(await db.from("products").update(toRow(input)).eq("id", id).select().single());
+    const current = unwrap<{ slug: string }>(await db.from("products").select("slug").eq("id", id).single());
+    const slug = isStaleCopySlug(current.slug, input.name) ? { slug: await uniqueSlug(db, input.name) } : {};
+    const row = unwrap<Row>(await db.from("products").update({ ...toRow(input), ...slug }).eq("id", id).select().single());
     return fromRow(row);
   },
   async setFlag(id, flag, value) {
@@ -200,6 +209,15 @@ export const supabaseRepository: CatalogRepository = {
     // Arquivo que sobra não pode impedir a alteração já salva: registra e segue.
     const { error } = await db.storage.from(BUCKET).remove(paths);
     if (error) console.error("Falha ao apagar imagens:", error.message);
+  },
+  async copyImage(url) {
+    const from = storagePath(url);
+    if (!from) return url;
+    const db = await createSessionClient();
+    const to = `${randomUUID()}.${from.split(".").pop()}`;
+    const { error } = await db.storage.from(BUCKET).copy(from, to);
+    if (error) throw new Error(error.message);
+    return db.storage.from(BUCKET).getPublicUrl(to).data.publicUrl;
   },
 
   async listCategories() {

@@ -1,10 +1,10 @@
 "use client";
 
-import { ArrowDown, ArrowUp, GripVertical, Pencil, Search, Trash2 } from "lucide-react";
+import { ArrowDown, ArrowUp, Copy, Eye, EyeOff, GripVertical, Pencil, Search, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useMemo, useRef, useState, useTransition } from "react";
-import { deleteProductAction, reorderAction, setFlagAction } from "@/app/admin/actions";
+import { deleteProductAction, duplicateProductAction, reorderAction, setFlagAction } from "@/app/admin/actions";
 import { ProductImage } from "@/components/store/ProductImage";
 import { categoryArt, categoryLabel, type Category } from "@/lib/categories";
 import { CONDITION_LABELS } from "@/lib/conditions";
@@ -90,6 +90,15 @@ export function ProductsManager({ products, categories }: { products: Product[];
     run(() => setFlagAction(product.id, flag, value), () => setItems(previous));
   };
 
+  const duplicate = (product: Product) => {
+    setError(null);
+    startTransition(async () => {
+      const result = await duplicateProductAction(product.id);
+      if (result.ok) router.push(`/admin/produtos/${result.id}`);
+      else setError(result.error);
+    });
+  };
+
   const askDelete = (product: Product) => {
     setToDelete(product);
     dialog.current?.showModal();
@@ -146,7 +155,7 @@ export function ProductsManager({ products, categories }: { products: Product[];
                 onDragEnd={() => setDragId(null)}
                 onDragOver={(e) => { if (!filtering) e.preventDefault(); }}
                 onDrop={(e) => { e.preventDefault(); dropOn(product.id); }}
-                className={`rounded-[18px] bg-white p-3 shadow-soft transition-opacity md:flex md:items-center md:gap-3 ${dragId === product.id ? "opacity-50" : ""}`}
+                className={`rounded-[18px] p-3 shadow-soft transition-opacity md:flex md:items-center md:gap-3 ${product.visible ? "bg-white" : "bg-white/60"} ${dragId === product.id ? "opacity-50" : ""}`}
               >
                 <div className="flex min-w-0 flex-1 items-center gap-3">
                   <div className="hidden items-center md:flex" aria-hidden="true">
@@ -162,6 +171,7 @@ export function ProductsManager({ products, categories }: { products: Product[];
                     <p className="truncate text-xs text-ink-mute">
                       {product.brand} · {categoryLabel(categories, product.category)} · {product.condition ? CONDITION_LABELS[product.condition] : <span className="font-medium text-offer">Condição não informada</span>}
                       {product.hasDamage && <span className="font-medium text-danger"> · Com avaria</span>}
+                      {!product.visible && <span className="font-semibold text-offer"> · Oculto na loja</span>}
                     </p>
                     <p className="mt-0.5 text-[13px] font-medium">
                       {product.price === null ? <span className="font-normal text-ink-mute">Sem preço</span> : formatPrice(product.promoPrice ?? product.price)}
@@ -180,6 +190,10 @@ export function ProductsManager({ products, categories }: { products: Product[];
                     ))}
                   </div>
                   <div className="flex items-center gap-0.5">
+                    <button type="button" aria-pressed={!product.visible} aria-label={product.visible ? `Ocultar ${product.name}` : `Mostrar ${product.name}`} title={product.visible ? "Ocultar na loja" : "Mostrar na loja"} onClick={() => setFlag(product, "visible", !product.visible)} className={arrow}>
+                      {product.visible ? <Eye size={15} /> : <EyeOff size={15} />}
+                    </button>
+                    <button type="button" aria-label={`Duplicar ${product.name}`} title="Duplicar" disabled={pending} onClick={() => duplicate(product)} className={arrow}><Copy size={14} /></button>
                     <button type="button" aria-label={`Subir ${product.name}`} disabled={filtering || pending || index === 0} onClick={() => move(index, -1)} className={arrow}><ArrowUp size={15} /></button>
                     <button type="button" aria-label={`Descer ${product.name}`} disabled={filtering || pending || index === items.length - 1} onClick={() => move(index, 1)} className={arrow}><ArrowDown size={15} /></button>
                     <Link href={`/admin/produtos/${product.id}`} aria-label={`Editar ${product.name}`} className={arrow}><Pencil size={14} /></Link>

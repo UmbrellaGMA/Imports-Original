@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { categoryArt } from "@/lib/categories";
 import { CONDITION_LABELS } from "@/lib/conditions";
+import { coverStyle } from "@/lib/cover";
 import { productMessage, whatsappUrl } from "@/lib/site";
 import type { Product } from "@/lib/types";
 import { Price } from "./Price";
@@ -32,6 +33,7 @@ export function ProductCard({ product, priority = false }: { product: Product; p
             sizes={CARD_SIZES}
             priority={priority}
             className={`${fit(cover)} ${alternate ? "transition-opacity duration-500 group-hover:opacity-0" : ""}`}
+            style={isPhoto(cover) ? coverStyle(product.coverAdjust) : undefined}
           />
           {alternate && (
             <ProductImage

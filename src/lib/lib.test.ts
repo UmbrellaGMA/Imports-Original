@@ -3,8 +3,9 @@ import { test } from "node:test";
 import { pointsOnlyToHidden } from "./categories.ts";
 import { contentImages, defaultContent, isDark, moveItem, newSection, normalizeContent, type SectionType } from "./content.ts";
 import { productMessage } from "./site.ts";
+import { coverStyle } from "./cover.ts";
 import { applyFilters, filtersToSearch, readFilters } from "./filters.ts";
-import { parsePrice, slugify } from "./format.ts";
+import { isStaleCopySlug, parsePrice, slugify } from "./format.ts";
 import type { Product } from "./types.ts";
 import { contentSchema, productSchema } from "./validation.ts";
 
@@ -22,9 +23,11 @@ const product = (over: Partial<Product>): Product => ({
   colors: [],
   capacities: [],
   images: [],
+  coverAdjust: { x: 50, y: 50, zoom: 1 },
   featured: false,
   isNew: false,
   available: true,
+  visible: true,
   condition: null,
   conservation: null,
   batteryHealth: null,
@@ -137,9 +140,11 @@ const draft = (over: object) => ({
   colors: [],
   capacities: [],
   images: [],
+  coverAdjust: { x: 50, y: 50, zoom: 1 },
   featured: false,
   isNew: false,
   available: true,
+  visible: true,
   condition: null,
   conservation: null,
   batteryHealth: null,
@@ -223,6 +228,28 @@ test("mensagem de produto esgotado pede a previsão de volta e mantém o link", 
     "Pode me avisar quando ele voltar?",
     "https://loja.com/produto/iphone-pro",
   ]);
+});
+
+test("ajuste da capa só aceita valores dentro dos limites", () => {
+  const valid = { condition: "novo" };
+  assert.deepEqual(invalidFields({ ...valid, coverAdjust: { x: 0, y: 100, zoom: 3 } }), []);
+  assert.deepEqual(invalidFields({ ...valid, coverAdjust: { x: 101, y: 50, zoom: 1 } }), ["coverAdjust"]);
+  assert.deepEqual(invalidFields({ ...valid, coverAdjust: { x: 50, y: 50, zoom: 0.5 } }), ["coverAdjust"]);
+  assert.deepEqual(invalidFields({ ...valid, coverAdjust: { x: 50, y: 50, zoom: 4 } }), ["coverAdjust"]);
+});
+
+test("estilo da capa usa o mesmo ponto na posição e no zoom", () => {
+  assert.deepEqual(coverStyle({ x: 20, y: 80, zoom: 1.5 }), { objectPosition: "20% 80%", transformOrigin: "20% 80%", transform: "scale(1.5)" });
+  assert.deepEqual(coverStyle(), { objectPosition: "50% 50%", transformOrigin: "50% 50%", transform: "scale(1)" });
+});
+
+test("endereço da cópia muda só quando ela é renomeada", () => {
+  assert.equal(slugify("iPhone 15 (cópia)"), "iphone-15-copia");
+  assert.equal(isStaleCopySlug("iphone-15-copia", "iPhone 15 (cópia)"), false);
+  assert.equal(isStaleCopySlug("iphone-15-copia-2", "iPhone 15 (cópia)"), false);
+  assert.equal(isStaleCopySlug("iphone-15-copia", "iPhone 15 Azul"), true);
+  assert.equal(isStaleCopySlug("iphone-15-copia-2", "iPhone 15 Azul"), true);
+  assert.equal(isStaleCopySlug("iphone-15", "iPhone 15 Azul"), false);
 });
 
 test("cor do texto acompanha o fundo", () => {

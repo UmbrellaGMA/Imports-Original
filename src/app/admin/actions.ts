@@ -63,6 +63,36 @@ export async function saveProductAction(id: string | null, input: ProductDraft):
   }
 }
 
+/** A cópia nasce oculta e logo abaixo do original, com arquivos de imagem próprios. */
+export async function duplicateProductAction(id: string): Promise<ActionResult> {
+  try {
+    await assertAdmin();
+    const repo = getRepository();
+    const product = await repo.getById(id);
+    if (!product) return { ok: false, error: "Produto não encontrado." };
+
+    // Sem arquivos próprios, excluir um dos dois produtos apagaria as fotos do outro.
+    const images: string[] = [];
+    let copy;
+    try {
+      for (const url of product.images) images.push(await repo.copyImage(url));
+      copy = await repo.create({ ...product, name: `${product.name.slice(0, 150)} (cópia)`, images, visible: false });
+    } catch (error) {
+      await repo.removeImages(images);
+      throw error;
+    }
+
+    const others = (await repo.list()).map((p) => p.id).filter((other) => other !== copy.id);
+    others.splice(others.indexOf(id) + 1, 0, copy.id);
+    await repo.reorder(others);
+
+    refreshStore();
+    return { ok: true, id: copy.id };
+  } catch (error) {
+    return failure(error, "Não foi possível duplicar o produto.");
+  }
+}
+
 export async function deleteProductAction(id: string): Promise<ActionResult> {
   try {
     await assertAdmin();
@@ -80,7 +110,7 @@ export async function deleteProductAction(id: string): Promise<ActionResult> {
 export async function setFlagAction(id: string, flag: ProductFlag, value: boolean): Promise<ActionResult> {
   try {
     await assertAdmin();
-    if (!["featured", "isNew", "available"].includes(flag)) throw new Error("Campo inválido.");
+    if (!["featured", "isNew", "available", "visible"].includes(flag)) throw new Error("Campo inválido.");
     await getRepository().setFlag(id, flag, Boolean(value));
     refreshStore();
     return { ok: true };

@@ -1,14 +1,17 @@
 "use client";
 
-import { ChevronLeft, ChevronRight, ImagePlus, Loader2, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, Crop, ImagePlus, Loader2, X } from "lucide-react";
 import { useRef, useState } from "react";
 import { uploadImageAction } from "@/app/admin/actions";
 import { ProductImage } from "@/components/store/ProductImage";
+import type { CoverAdjust } from "@/lib/cover";
 import { compressImage } from "./compressImage";
+import { CoverEditor } from "./CoverEditor";
 
 const MAX_IMAGES = 12;
 
-export function ImageManager({ images, onChange, onBusyChange }: { images: string[]; onChange: (update: (current: string[]) => string[]) => void; onBusyChange: (busy: boolean) => void }) {
+export function ImageManager({ images, onChange, onBusyChange, coverAdjust, onCoverAdjust }: { images: string[]; onChange: (update: (current: string[]) => string[]) => void; onBusyChange: (busy: boolean) => void; coverAdjust: CoverAdjust; onCoverAdjust: (value: CoverAdjust) => void }) {
+  const [editingCover, setEditingCover] = useState(false);
   const [uploading, setUploading] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const [dragOver, setDragOver] = useState(false);
@@ -99,6 +102,15 @@ export function ImageManager({ images, onChange, onBusyChange }: { images: strin
           e.target.value = "";
         }}
       />
+      {images[0] && !images[0].endsWith(".svg") && (
+        <button type="button" onClick={() => setEditingCover(true)} className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-canvas px-3.5 py-2 text-[13px] font-medium transition-colors hover:bg-[#ebebe8]">
+          <Crop size={14} />
+          Ajustar foto da capa
+        </button>
+      )}
+      {editingCover && images[0] && (
+        <CoverEditor src={images[0]} value={coverAdjust} onApply={onCoverAdjust} onClose={() => setEditingCover(false)} />
+      )}
       <p className="mt-2 text-xs text-ink-mute">JPG, PNG ou WebP. Até {MAX_IMAGES} imagens, otimizadas automaticamente. A primeira é a capa.</p>
       {error && <p role="alert" className="mt-2 text-sm text-danger">{error}</p>}
     </div>

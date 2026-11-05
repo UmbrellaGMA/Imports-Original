@@ -34,6 +34,12 @@ export const slugify = (text: string) =>
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "") || "produto";
 
+const COPY_SLUG = /-copia(-\d+)?$/;
+
+/** A cópia nasce com "-copia" no endereço; ao ser renomeada, ganha um endereço do nome novo. */
+export const isStaleCopySlug = (slug: string, name: string) =>
+  COPY_SLUG.test(slug) && !COPY_SLUG.test(slugify(name));
+
 /** Preço efetivamente cobrado: o promocional, quando existir. */
 export const effectivePrice = (p: { price: number | null; promoPrice: number | null }) =>
   p.promoPrice ?? p.price;

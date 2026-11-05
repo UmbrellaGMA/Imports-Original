@@ -16,6 +16,8 @@ export interface CatalogRepository {
   reorder(orderedIds: string[]): Promise<void>;
   uploadImage(data: Buffer, extension: string, contentType: string): Promise<string>;
   removeImages(urls: string[]): Promise<void>;
+  /** Cria um arquivo independente. Imagens que não foram enviadas (ilustrações) voltam como estão. */
+  copyImage(url: string): Promise<string>;
 
   listCategories(): Promise<Category[]>;
   createCategory(input: CategoryInput): Promise<Category>;

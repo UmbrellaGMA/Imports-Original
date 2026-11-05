@@ -153,6 +153,14 @@ alter table public.products
   add column if not exists warranty text not null default '',
   add column if not exists included text[] not null default '{}';
 
+-- Produto oculto continua no painel, mas sai da loja. Nada é apagado.
+alter table public.products
+  add column if not exists visible boolean not null default true;
+
+-- Enquadramento da foto de capa no card da loja.
+alter table public.products
+  add column if not exists cover_adjust jsonb not null default '{"x": 50, "y": 50, "zoom": 1}'::jsonb;
+
 alter table public.products drop constraint if exists products_condition_check;
 alter table public.products add constraint products_condition_check
   check (condition is null or condition in ('novo', 'seminovo'));
@@ -220,7 +228,8 @@ as $$
   update public.products as p
   set sort_order = o.position
   from unnest(ordered_ids) with ordinality as o(id, position)
-  where p.id = o.id;
+  -- Quem não muda de lugar não é tocado, e mantém a data de atualização.
+  where p.id = o.id and p.sort_order is distinct from o.position;
 $$;
 
 revoke all on function public.reorder_products(uuid[]) from public;

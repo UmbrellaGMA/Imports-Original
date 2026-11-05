@@ -45,13 +45,14 @@ export const getHiddenCategorySlugs = cache(async () =>
   (await getAllCategories()).filter((c) => !c.visible).map((c) => c.slug),
 );
 
-/** Leitura pública do catálogo, sem os produtos de categorias ocultas. Memoizada por requisição. */
+/** Leitura pública do catálogo, sem produtos ocultos nem de categorias ocultas. Memoizada por requisição. */
 export const getProducts = cache(async () => {
   const [products, hidden] = await Promise.all([
     isSupabaseConfigured() ? cachedSupabaseList() : localRepository.list(),
     getHiddenCategorySlugs(),
   ]);
-  return hidden.length ? products.filter((p) => !hidden.includes(p.category)) : products;
+  // "!== false": logo após publicar, o cache ainda pode trazer produtos sem este campo.
+  return products.filter((p) => p.visible !== false && !hidden.includes(p.category));
 });
 
 export const getProductBySlug = cache(async (slug: string) => {

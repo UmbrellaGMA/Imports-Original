@@ -7,6 +7,7 @@ import { useState, useTransition, type FormEvent, type KeyboardEvent } from "rea
 import { saveProductAction } from "@/app/admin/actions";
 import type { Category } from "@/lib/categories";
 import { CONSERVATION_OPTIONS, INCLUDED_PRESETS, type Conservation, type ProductCondition } from "@/lib/conditions";
+import { DEFAULT_COVER, type CoverAdjust } from "@/lib/cover";
 import { parsePrice, priceToInput } from "@/lib/format";
 import type { Product, ProductColor, ProductSpec } from "@/lib/types";
 import { ImageManager } from "./ImageManager";
@@ -64,9 +65,13 @@ export function ProductForm({ product, categories }: { product: Product | null; 
   const [capacities, setCapacities] = useState<string[]>(product?.capacities ?? []);
   const [capacityDraft, setCapacityDraft] = useState("");
   const [images, setImages] = useState<string[]>(product?.images ?? []);
+  // O ajuste pertence a uma foto: se outra virar a capa, volta ao enquadramento padrão.
+  const [cover, setCover] = useState<{ url: string | undefined; adjust: CoverAdjust }>({ url: product?.images[0], adjust: product?.coverAdjust ?? DEFAULT_COVER });
+  const coverAdjust = cover.url === images[0] ? cover.adjust : DEFAULT_COVER;
   const [featured, setFeatured] = useState(product?.featured ?? false);
   const [isNew, setIsNew] = useState(product?.isNew ?? false);
   const [available, setAvailable] = useState(product?.available ?? true);
+  const [visible, setVisible] = useState(product?.visible ?? true);
   // Produto novo no cadastro e produto antigo sem condição começam sem resposta: é preciso declarar.
   const [condition, setCondition] = useState<ProductCondition | null>(product?.condition ?? null);
   const [conservation, setConservation] = useState<Conservation | null>(product?.conservation ?? null);
@@ -126,9 +131,11 @@ export function ProductForm({ product, categories }: { product: Product | null; 
       colors: colors.filter((c) => c.name.trim()),
       capacities: pendingCapacity && !capacities.includes(pendingCapacity) ? [...capacities, pendingCapacity] : capacities,
       images,
+      coverAdjust,
       featured,
       isNew,
       available,
+      visible,
       condition,
       conservation,
       batteryHealth: battery.trim() === "" ? null : Number(battery.replace(/[%\s]/g, "")),
@@ -259,7 +266,7 @@ export function ProductForm({ product, categories }: { product: Product | null; 
           </Section>
 
           <Section title="Imagens">
-            <ImageManager images={images} onChange={setImages} onBusyChange={setUploading} />
+            <ImageManager images={images} onChange={setImages} onBusyChange={setUploading} coverAdjust={coverAdjust} onCoverAdjust={(adjust) => setCover({ url: images[0], adjust })} />
             {fields.images && <p role="alert" className="mt-2 text-xs text-danger">{fields.images}</p>}
           </Section>
 
@@ -346,6 +353,7 @@ export function ProductForm({ product, categories }: { product: Product | null; 
 
           <Section title="Exibição">
             <div className="space-y-4">
+              <Switch label="Oculto" hint="Não aparece na loja, só aqui no painel." checked={!visible} onChange={(hidden) => setVisible(!hidden)} />
               <Switch label="Esgotado" hint="Continua no site, com o selo de esgotado." checked={!available} onChange={(soldOut) => setAvailable(!soldOut)} />
               <Switch label="Destaque" hint="Aparece nos destaques da página inicial." checked={featured} onChange={setFeatured} />
               <Switch label="Lançamento" hint="Recebe o selo de lançamento." checked={isNew} onChange={setIsNew} />

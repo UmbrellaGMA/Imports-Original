@@ -1,10 +1,10 @@
 import "server-only";
 import { randomUUID } from "node:crypto";
-import { mkdir, readFile, rename, unlink, writeFile } from "node:fs/promises";
+import { copyFile, mkdir, readFile, rename, unlink, writeFile } from "node:fs/promises";
 import { basename, join } from "node:path";
 import { DEFAULT_CATEGORIES, type Category } from "@/lib/categories";
 import { normalizeContent, type SiteContent } from "@/lib/content";
-import { slugify } from "@/lib/format";
+import { isStaleCopySlug, slugify } from "@/lib/format";
 import type { Product } from "@/lib/types";
 import type { CatalogRepository } from "./repository";
 import { buildSeed } from "./seed";
@@ -107,7 +107,8 @@ export const localRepository: CatalogRepository = {
     return mutate((products) => {
       const current = products.find((p) => p.id === id);
       if (!current) throw new Error("Produto não encontrado.");
-      const product: Product = { ...current, ...input, updatedAt: new Date().toISOString() };
+      const slug = isStaleCopySlug(current.slug, input.name) ? uniqueSlug(input.name, products) : current.slug;
+      const product: Product = { ...current, ...input, slug, updatedAt: new Date().toISOString() };
       return { next: products.map((p) => (p.id === id ? product : p)), result: product };
     });
   },
@@ -141,6 +142,12 @@ export const localRepository: CatalogRepository = {
         .filter((url) => url.startsWith(LOCAL_IMAGE_ROUTE))
         .map((url) => unlink(join(uploadsDir(), basename(url))).catch(() => undefined)),
     );
+  },
+  async copyImage(url) {
+    if (!url.startsWith(LOCAL_IMAGE_ROUTE)) return url;
+    const file = `${randomUUID()}.${url.split(".").pop()}`;
+    await copyFile(join(uploadsDir(), basename(url)), join(uploadsDir(), file));
+    return `${LOCAL_IMAGE_ROUTE}${file}`;
   },
 
   listCategories() {
