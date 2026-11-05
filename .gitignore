@@ -1,0 +1,17 @@
+node_modules/
+.next/
+out/
+*.tsbuildinfo
+next-env.d.ts
+
+# Variáveis de ambiente (nunca versionar chaves)
+.env
+.env.local
+.env.*.local
+
+# Catálogo e imagens do modo local
+.data/
+
+npm-debug.log*
+.DS_Store
+.vercel

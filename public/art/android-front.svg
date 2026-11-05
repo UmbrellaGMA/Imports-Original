@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 1120" width="640" height="1120" fill="none"><defs><filter id="groundBlur" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="26"/></filter><clipPath id="wpClip"><rect x="115" y="75" width="410" height="878" rx="38"/></clipPath><filter id="wpBlur" filterUnits="userSpaceOnUse" x="-295" y="-803" width="1230" height="2634"><feGaussianBlur stdDeviation="74.63000000000001"/></filter><linearGradient id="edge" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#141417"/><stop offset="0.03" stop-color="#7a7b81"/><stop offset="0.1" stop-color="#2f3035"/><stop offset="0.5" stop-color="#1b1b1f"/><stop offset="0.9" stop-color="#2f3035"/><stop offset="0.97" stop-color="#7a7b81"/><stop offset="1" stop-color="#141417"/></linearGradient><linearGradient id="reflect" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity="0.1"/><stop offset="0.3" stop-color="#fff" stop-opacity="0.01"/><stop offset="0.31" stop-color="#fff" stop-opacity="0"/></linearGradient><linearGradient id="button" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7a7b81"/><stop offset="1" stop-color="#141417"/></linearGradient></defs>
+  <ellipse cx="320" cy="1000" rx="220" ry="18" fill="#000" opacity="0.28" filter="url(#groundBlur)"/>
+  <rect x="96" y="240" width="6" height="46" rx="3" fill="url(#button)"/>
+  <rect x="96" y="310" width="6" height="84" rx="3" fill="url(#button)"/>
+  <rect x="96" y="410" width="6" height="84" rx="3" fill="url(#button)"/>
+  <rect x="538" y="340" width="6" height="128" rx="3" fill="url(#button)"/>
+  <rect x="100" y="60" width="440" height="908" rx="52" fill="url(#edge)"/>
+  <rect x="105" y="65" width="430" height="898" rx="47" fill="#040405"/>
+  <g clip-path="url(#wpClip)"><rect x="115" y="75" width="410" height="878" fill="#051622"/><g filter="url(#wpBlur)"><circle cx="443" cy="338.4" r="299.398" fill="#1fb6a6" opacity="0.92"/><circle cx="176.5" cy="426.20000000000005" r="326.616" fill="#1d4ed8" opacity="0.92"/><circle cx="381.5" cy="909.0999999999999" r="217.74400000000003" fill="#9be7d0" opacity="0.92"/><circle cx="320" cy="689.5999999999999" r="272.18" fill="#0a3a5e" opacity="0.92"/></g></g>
+  <circle cx="320" cy="111" r="13" fill="#000"/><circle cx="320" cy="111" r="5" fill="#141a2c"/>
+  <text x="320" y="274" text-anchor="middle" font-family="'Inter','SF Pro Display',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="104" font-weight="300" fill="#fff" fill-opacity=".94" letter-spacing="-3">12:20</text>
+  <rect x="250" y="930" width="140" height="5" rx="2.5" fill="#fff" fill-opacity=".85"/>
+  <rect x="115" y="75" width="410" height="878" rx="38" fill="url(#reflect)"/></svg>

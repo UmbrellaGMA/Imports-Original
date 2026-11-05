@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 1120" width="640" height="1120" fill="none"><defs><filter id="groundBlur" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="26"/></filter><linearGradient id="lensRing" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#55555a"/><stop offset="0.5" stop-color="#1c1c20"/><stop offset="1" stop-color="#3b3b40"/></linearGradient><radialGradient id="lensGlass" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stop-color="#1a2130"/><stop offset="0.7" stop-color="#0b0d14"/><stop offset="1" stop-color="#020204"/></radialGradient><radialGradient id="lensCore" cx="0.42" cy="0.4" r="0.6"><stop offset="0" stop-color="#26365a"/><stop offset="0.55" stop-color="#121a30"/><stop offset="1" stop-color="#05060c"/></radialGradient><linearGradient id="edge" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#68786a"/><stop offset="0.03" stop-color="#dbe4d9"/><stop offset="0.09" stop-color="#99aa97"/><stop offset="0.5" stop-color="#778876"/><stop offset="0.91" stop-color="#99aa97"/><stop offset="0.97" stop-color="#dbe4d9"/><stop offset="1" stop-color="#68786a"/></linearGradient><linearGradient id="glass" x1="0.1" y1="0" x2="0.9" y2="1"><stop offset="0" stop-color="#bcc9ba"/><stop offset="0.48" stop-color="#99aa97"/><stop offset="1" stop-color="#778876"/></linearGradient><linearGradient id="sheen" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity="0.28"/><stop offset="0.32" stop-color="#fff" stop-opacity="0.03"/><stop offset="0.6" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity="0.14"/></linearGradient><linearGradient id="plate" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity="0.2"/><stop offset="1" stop-color="#000" stop-opacity="0.12"/></linearGradient><linearGradient id="button" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#dbe4d9"/><stop offset="1" stop-color="#68786a"/></linearGradient></defs><ellipse cx="320" cy="1000" rx="220" ry="18" fill="#000" opacity="0.28" filter="url(#groundBlur)"/>
+  <rect x="96" y="240" width="6" height="46" rx="3" fill="url(#button)"/>
+  <rect x="96" y="310" width="6" height="84" rx="3" fill="url(#button)"/>
+  <rect x="96" y="410" width="6" height="84" rx="3" fill="url(#button)"/>
+  <rect x="538" y="340" width="6" height="128" rx="3" fill="url(#button)"/>
+  <rect x="100" y="60" width="440" height="908" rx="52" fill="url(#edge)"/>
+  <rect x="106" y="66" width="428" height="896" rx="46" fill="url(#glass)"/>
+  <rect x="106" y="66" width="428" height="896" rx="46" fill="url(#sheen)"/>
+    <rect x="142" y="116" width="108" height="330" rx="54" fill="#a9b9a7" opacity=".55"/>
+    <rect x="142" y="116" width="108" height="330" rx="54" fill="url(#plate)"/>
+    
+  <circle cx="196" cy="172" r="47" fill="#000" opacity=".22"/>
+  <circle cx="196" cy="172" r="40" fill="url(#lensRing)"/>
+  <circle cx="196" cy="172" r="38.5" stroke="#6b6b70" stroke-width="1.5" opacity=".6"/>
+  <circle cx="196" cy="172" r="32" fill="url(#lensGlass)"/>
+  <circle cx="196" cy="172" r="20.8" fill="url(#lensCore)"/>
+  <circle cx="196" cy="172" r="8.8" fill="#050508"/>
+  <ellipse cx="184.8" cy="158.4" rx="8" ry="5.2" fill="#fff" opacity=".5" transform="rotate(-35 184.8 158.4)"/>
+  <circle cx="208" cy="184.8" r="2.8000000000000003" fill="#8db4ff" opacity=".55"/>
+  <circle cx="196" cy="281" r="47" fill="#000" opacity=".22"/>
+  <circle cx="196" cy="281" r="40" fill="url(#lensRing)"/>
+  <circle cx="196" cy="281" r="38.5" stroke="#6b6b70" stroke-width="1.5" opacity=".6"/>
+  <circle cx="196" cy="281" r="32" fill="url(#lensGlass)"/>
+  <circle cx="196" cy="281" r="20.8" fill="url(#lensCore)"/>
+  <circle cx="196" cy="281" r="8.8" fill="#050508"/>
+  <ellipse cx="184.8" cy="267.4" rx="8" ry="5.2" fill="#fff" opacity=".5" transform="rotate(-35 184.8 267.4)"/>
+  <circle cx="208" cy="293.8" r="2.8000000000000003" fill="#8db4ff" opacity=".55"/>
+  <circle cx="196" cy="390" r="47" fill="#000" opacity=".22"/>
+  <circle cx="196" cy="390" r="40" fill="url(#lensRing)"/>
+  <circle cx="196" cy="390" r="38.5" stroke="#6b6b70" stroke-width="1.5" opacity=".6"/>
+  <circle cx="196" cy="390" r="32" fill="url(#lensGlass)"/>
+  <circle cx="196" cy="390" r="20.8" fill="url(#lensCore)"/>
+  <circle cx="196" cy="390" r="8.8" fill="#050508"/>
+  <ellipse cx="184.8" cy="376.4" rx="8" ry="5.2" fill="#fff" opacity=".5" transform="rotate(-35 184.8 376.4)"/>
+  <circle cx="208" cy="402.8" r="2.8000000000000003" fill="#8db4ff" opacity=".55"/>
+    <circle cx="300" cy="172" r="13" fill="#f5eccf"/><circle cx="300" cy="172" r="13" stroke="#000" stroke-opacity=".25" stroke-width="2"/>
+    <circle cx="300" cy="232" r="10" fill="#15151a"/></svg>

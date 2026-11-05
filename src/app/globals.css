@@ -1,0 +1,269 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: var(--font-inter), -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Helvetica, Arial, sans-serif;
+
+  --color-ink: #17171a;
+  --color-ink-soft: #4d4d53;
+  --color-ink-mute: #6b6b71;
+  --color-canvas: #f5f5f3;
+  --color-line: #e4e4e0;
+  --color-accent: #0d5c50;
+  --color-accent-strong: #09463d;
+  --color-accent-soft: #e3efec;
+  --color-offer: #a8481c;
+  --color-danger: #b3261e;
+
+  --shadow-soft: 0 1px 2px rgb(23 23 26 / 0.03), 0 8px 24px rgb(23 23 26 / 0.04);
+  --shadow-lift: 0 2px 6px rgb(23 23 26 / 0.04), 0 20px 48px rgb(23 23 26 / 0.09);
+
+  --ease-soft: cubic-bezier(0.22, 0.8, 0.24, 1);
+  --spacing-header: 3.25rem;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background: #fff;
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-optical-sizing: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+button,
+summary,
+label[for] {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
+/* ── Tipografia editorial ── */
+.display {
+  font-size: clamp(2.5rem, 1.55rem + 4.4vw, 5.25rem);
+  line-height: 1.04;
+  letter-spacing: -0.035em;
+  font-weight: 600;
+  text-wrap: balance;
+}
+
+.headline {
+  font-size: clamp(2rem, 1.45rem + 2.5vw, 3.5rem);
+  line-height: 1.07;
+  letter-spacing: -0.03em;
+  font-weight: 600;
+  text-wrap: balance;
+}
+
+.title {
+  font-size: clamp(1.625rem, 1.35rem + 1.15vw, 2.5rem);
+  line-height: 1.1;
+  letter-spacing: -0.025em;
+  font-weight: 600;
+  text-wrap: balance;
+}
+
+.lede {
+  font-size: clamp(1.0625rem, 1rem + 0.35vw, 1.3125rem);
+  line-height: 1.45;
+  letter-spacing: -0.012em;
+  text-wrap: pretty;
+}
+
+/* ── Botões ── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 999px;
+  padding: 0.78rem 1.5rem;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  transition: background-color 0.25s, color 0.25s, border-color 0.25s, transform 0.25s var(--ease-soft);
+}
+.btn:active:not(:disabled) {
+  transform: scale(0.98);
+}
+.btn:disabled {
+  opacity: 0.55;
+}
+.btn-dark {
+  background: var(--color-ink);
+  color: #fff;
+}
+.btn-dark:hover:not(:disabled) {
+  background: #38383d;
+}
+.btn-light {
+  background: #fff;
+  color: var(--color-ink);
+}
+.btn-light:hover {
+  background: #ececea;
+}
+.btn-accent {
+  background: var(--color-accent);
+  color: #fff;
+}
+.btn-accent:hover:not(:disabled) {
+  background: var(--color-accent-strong);
+}
+.btn-outline {
+  border: 1px solid var(--color-line);
+  background: #fff;
+  color: var(--color-ink);
+}
+.btn-outline:hover:not(:disabled) {
+  border-color: var(--color-ink);
+}
+
+/* ── Animações de entrada (só ativas com JavaScript) ── */
+html.js .reveal {
+  opacity: 0;
+  transform: translateY(26px);
+  transition: opacity 1s var(--ease-soft), transform 1s var(--ease-soft);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+html.js .reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(var(--rise, 30px));
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.rise {
+  animation: rise 1.15s var(--ease-soft) both;
+  animation-delay: var(--delay, 0ms);
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.fade-up {
+  animation: fade-up 0.5s var(--ease-soft) both;
+  animation-delay: var(--delay, 0ms);
+}
+
+/* Movimento leve das composições durante a rolagem, onde houver suporte */
+@supports (animation-timeline: view()) {
+  @keyframes drift {
+    from {
+      transform: translateY(var(--drift, 5%));
+    }
+    to {
+      transform: translateY(0);
+    }
+  }
+  .drift {
+    animation: drift linear both;
+    animation-timeline: view();
+    animation-range: entry 0% cover 45%;
+  }
+}
+
+/* ── Skeleton ── */
+@keyframes shimmer {
+  to {
+    background-position: -200% 0;
+  }
+}
+.skeleton {
+  background: linear-gradient(100deg, #efefec 30%, #f8f8f6 50%, #efefec 70%);
+  background-size: 200% 100%;
+  animation: shimmer 1.6s linear infinite;
+  border-radius: 0.5rem;
+}
+
+/* ── Utilitários ── */
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+dialog.sheet {
+  margin: auto 0 0;
+  width: 100%;
+  max-width: 100%;
+  max-height: 88dvh;
+  border-radius: 1.5rem 1.5rem 0 0;
+  background: #fff;
+  color: inherit;
+}
+dialog.sheet[open] {
+  animation: sheet-in 0.35s var(--ease-soft);
+}
+dialog.sheet::backdrop {
+  background: rgb(0 0 0 / 0.35);
+  backdrop-filter: blur(2px);
+}
+@keyframes sheet-in {
+  from {
+    transform: translateY(100%);
+  }
+}
+
+dialog.modal {
+  margin: auto;
+  width: calc(100% - 2rem);
+  max-width: 26rem;
+  border-radius: 1.25rem;
+  background: #fff;
+  color: inherit;
+}
+dialog.modal::backdrop {
+  background: rgb(0 0 0 / 0.35);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
+  }
+  .drift {
+    animation: none;
+  }
+  html.js .reveal {
+    opacity: 1;
+    transform: none;
+  }
+}
