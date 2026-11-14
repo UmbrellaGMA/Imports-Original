@@ -73,6 +73,12 @@ export function Footer({ content, categories }: { content: SiteContent; categori
           <Link href="/privacidade" className="transition-colors hover:text-ink">Política de privacidade</Link>
         </div>
         {footer.legalNote && <p className="mt-3 max-w-3xl text-[11px] leading-relaxed text-ink-mute">{footer.legalNote}</p>}
+        <p className="mt-3 text-[11px] text-ink-mute">
+          Desenvolvido por{" "}
+          <a href="https://www.orionstudio013.online/" target="_blank" rel="noopener" className="font-medium text-ink-soft underline-offset-2 transition-colors hover:text-ink hover:underline">
+            Gustavo Melo
+          </a>
+        </p>
       </div>
     </footer>
   );
